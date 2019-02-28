@@ -16,30 +16,14 @@ int numVertices = 1000;
 
 void setup() {
 	glClearColor(1.0, 1.0, 1.0, 1.0);//red,green,blue,alpha
-	//cord system for "Real World"
-	glMatrixMode(GL_PROJECTION); //uses marties to transform cords from one to the other
-	//projection putting something from 3d image and putting it into 2d plane
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0.0, 640.0, 0.0, 480.0); //left,right,bottom,top
 
 }
 
-void drawSquare() {
-//	glClear(GL_COLOR_BUFFER_BIT);
-	glColor3f(red, blue, green);
-	/*
-	glBegin(GL_POLYGON); //used to draw a square
-	//vetices of polygon
-	glVertex2f(20.0, 20.0);
-	glVertex2f(80.0, 20.0);
-	glVertex2f(80.0, 80.0);
-	glVertex2f(20.0, 80.0);
-
-	glEnd();*/
-	glFlush();
-}
-
 void circle(int x1, int y1, int x2, int y2) {
+	glColor3f(red, blue, green);
 	y1 = height - y1;
 	y2 = height - y2;
 	float rx = (x1 + x2)/2;
@@ -56,11 +40,10 @@ void circle(int x1, int y1, int x2, int y2) {
 	}
 	glEnd();
 	glFlush();
-	//int r = sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
 void box(int x, int y, int x2, int y2) {
-	//a^2 + b^2 = c^2
+	glColor3f(red, blue, green);
 	y = height - y;
 	y2 = height - y2;
 	glBegin(GL_LINE_LOOP);
@@ -69,10 +52,11 @@ void box(int x, int y, int x2, int y2) {
 	glVertex2f(x2, y2); //bottom right
 	glVertex2f(x2, y); //top right
 	glEnd();
-
+	glFlush();
 }
 
 void line(int x, int y, int x2, int y2) {
+	glColor3f(red, blue, green);
 	y = height - y;
 	y2 = height - y2;
 	glBegin(GL_LINES);
@@ -84,7 +68,6 @@ void line(int x, int y, int x2, int y2) {
 
 
 void brush(int x, int y) {
-	
 	glColor3f(red, blue, green);
 	glBegin(GL_POLYGON);
 	glVertex2f(x-brushSize, y-brushSize);
@@ -98,7 +81,6 @@ void brush(int x, int y) {
 void myMouse(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		y = height - y;
-		//glViewport(x, y, 200, 200);
 		if (shape == 1) { //brush
 			brush(x, y);
 		}
@@ -106,64 +88,39 @@ void myMouse(int button, int state, int x, int y) {
 			firstx = x;
 			firsty = height - y;
 			second = true;
-			cout << second <<endl; //0 false, 1 true
-			cout << firstx << endl;
-			cout << firsty << endl;
 		}
 		else if (shape == 2 && second == true) {
 			secondx = x;
 			secondy = height - y;
 			line(firstx, firsty,secondx,secondy);
 			second = false;
-			cout << second << endl;
-			cout << secondx << endl;
-			cout << secondy << endl;
 		}
 		else if (shape == 3 && second == false) {
 			firstx = x;
 			firsty = height - y;
 			second = true;
-			cout << second << endl; //0 false, 1 true
-			cout << firstx << endl;
-			cout << firsty << endl;
 		}
 		else if (shape == 3 && second == true) {
 			secondx = x;
 			secondy = height - y;
 			box(firstx, firsty, secondx, secondy);
 			second = false;
-			cout << second << endl;
-			cout << secondx << endl;
-			cout << secondy << endl;
 		}
 		else if (shape == 4 && second == false) {
 			firstx = x;
 			firsty = height - y;
 			second = true;
-			cout << second << endl; //0 false, 1 true
-			cout << firstx << endl;
-			cout << firsty << endl;
 		}
 		else if (shape == 4 && second == true) {
 			secondx = x;
 			secondy = height - y;
 			circle(firstx, firsty, secondx, secondy);
 			second = false;
-			cout << second << endl;
-			cout << secondx << endl;
-			cout << secondy << endl;
 		}
-		
 	}
-	else{
-		
-	}
-	//glutPostRedisplay(); //recalls any display function you already have
 }
 
 void mouseMove(int x, int y) {
-	//stuff
-	//glViewport(x, (480 - y), 200, 200);
 	if (shape == 1) { //brush
 		y = height - y;
 		brush(x, y);
@@ -287,7 +244,7 @@ void menu() {
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
-int main(int argc, char **argv) { //** means pointer to another pointer
+int main(int argc, char **argv) { 
 	glutInit(&argc, argv); //initialize Glut (library that will do windowing part) 
 	glutInitContextVersion(4, 3);
 	glutInitContextProfile(GLUT_COMPATIBILITY_PROFILE);
@@ -301,11 +258,7 @@ int main(int argc, char **argv) { //** means pointer to another pointer
 	glutCreateWindow("Paint Project");//title of window
 	setup();
 	glClear(GL_COLOR_BUFFER_BIT);
-	glutDisplayFunc(drawSquare); //when you want to display, use this function
 	glutMouseFunc(myMouse);
-	/*
-	glutKeyboardFunc(keyFunc); //used for keyboard events
-	glutMouseFunc(mouse2);*/
 	glutMotionFunc(mouseMove); //good for paint program
 	
 	menu();
